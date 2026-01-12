@@ -6,73 +6,71 @@
     <title>Teste de Temperamento</title>
     <style>
         :root {
-            --bg-color: #f0f4f8; /* Cinza-azulado muito claro */
-            --card-bg: #ffffff;
-            --primary-blue: #5c8ab9; /* Azul pastel sóbrio */
-            --dark-text: #2c3e50;
-            --soft-text: #7f8c8d;
-            --hover-blue: #e8f0fe;
+            --bg-color: #f0f4f8; --card-bg: #ffffff;
+            --primary-blue: #5c8ab9; --dark-text: #2c3e50; --soft-text: #7f8c8d;
         }
-
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--dark-text);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color);
+            color: var(--dark-text); margin: 0; display: flex;
+            justify-content: center; align-items: center; min-height: 100vh;
         }
-
         .container {
-            background-color: var(--card-bg);
-            padding: 50px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(92, 138, 185, 0.15);
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            transition: transform 0.3s ease;
+            background-color: var(--card-bg); padding: 50px; border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(92, 138, 185, 0.15); width: 90%;
+            max-width: 500px; text-align: center;
         }
-
-        h1, h2 { color: var(--primary-blue); margin-bottom: 15px; }
-        p { color: var(--soft-text); line-height: 1.6; margin-bottom: 30px; }
-
-        /* Botão Principal */
+        h1 { color: var(--primary-blue); margin-bottom: 10px; }
+        
         .btn-start {
-            display: inline-block;
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 15px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(92, 138, 185, 0.3);
+            display: inline-block; background-color: var(--primary-blue);
+            color: white; padding: 15px 40px; border-radius: 50px;
+            text-decoration: none; font-weight: 600; margin-top: 20px; margin-bottom: 40px;
+            transition: transform 0.2s; box-shadow: 0 5px 15px rgba(92, 138, 185, 0.3);
         }
-
-        .btn-start:hover {
-            background-color: #4a76a0;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(92, 138, 185, 0.4);
+        .btn-start:hover { transform: translateY(-2px); background-color: #4a76a0; }
+        
+        /* Área de Simulação */
+        .debug-area {
+            border-top: 1px dashed #cfd8dc; padding-top: 20px; margin-top: 20px;
+        }
+        .debug-title {
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;
+            color: #b0bec5; margin-bottom: 15px;
+        }
+        .sim-grid {
+            display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+        }
+        .btn-sim {
+            font-size: 0.75rem; padding: 5px 12px; border-radius: 20px;
+            border: 1px solid #cfd8dc; color: #78909c; text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-sim:hover {
+            border-color: var(--primary-blue); color: var(--primary-blue);
+            background-color: #f0f4f8;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#5c8ab9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 20px;">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-            <line x1="9" y1="9" x2="9.01" y2="9"></line>
-            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#5c8ab9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
         </svg>
-
         <h1>Análise de Temperamento</h1>
-        <p>Descubra as nuances da sua personalidade através deste sistema baseado em conhecimento. Responda com sinceridade.</p>
+        <p style="color: var(--soft-text);">Descubra seu perfil comportamental.</p>
         
         <a href="/inicio" class="btn-start">Iniciar Avaliação</a>
+        
+        <div class="debug-area">
+            <div class="debug-title">Simular Resultado (Debug)</div>
+            <div class="sim-grid">
+                <a href="/simular?alvo=Sanguíneo" class="btn-sim">Sanguíneo</a>
+                <a href="/simular?alvo=Colérico" class="btn-sim">Colérico</a>
+                <a href="/simular?alvo=Melancólico" class="btn-sim">Melancólico</a>
+                <a href="/simular?alvo=Fleumático" class="btn-sim">Fleumático</a>
+            </div>
+        </div>
     </div>
 </body>
 </html>

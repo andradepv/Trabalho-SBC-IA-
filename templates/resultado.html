@@ -3,94 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seu Resultado</title>
+    <title>Resultado</title>
     <style>
-        /* (Mesmo CSS Global) */
         :root {
-            --bg-color: #f0f4f8; 
-            --card-bg: #ffffff;
-            --primary-blue: #5c8ab9;
-            --dark-blue: #34495e;
+            --bg-color: #f0f4f8; --card-bg: #ffffff;
+            --primary-blue: #5c8ab9; --dark-blue: #34495e;
         }
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color);
+            margin: 0; padding: 40px 20px; display: flex; justify-content: center; min-height: 100vh;
         }
         .container {
-            background-color: var(--card-bg);
-            padding: 0; /* Padding removido para o header do card funcionar */
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-            width: 90%;
-            max-width: 450px;
-            overflow: hidden; /* Para o border-radius cortar a imagem */
-            text-align: center;
+            background-color: var(--card-bg); border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08); width: 100%;
+            max-width: 600px; overflow: hidden; text-align: center; height: fit-content;
         }
-
-        /* Cabeçalho do Card */
         .result-header {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 40px 20px;
+            background: linear-gradient(135deg, #5c8ab9 0%, #4a76a0 100%);
+            color: white; padding: 50px 20px;
         }
-        
-        .result-label {
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            opacity: 0.8;
-            letter-spacing: 1px;
-        }
-
-        .main-result {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin: 10px 0;
-        }
-
+        .main-result { font-size: 2.5rem; font-weight: 700; margin: 10px 0; letter-spacing: 1px; }
         .main-score {
-            background: rgba(255,255,255,0.2);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            display: inline-block;
+            background: rgba(255,255,255,0.25); padding: 5px 20px;
+            border-radius: 30px; font-size: 1rem; display: inline-block;
         }
-
-        /* Corpo do Card */
-        .result-body {
-            padding: 30px;
-        }
-
+        .result-body { padding: 40px; }
         .secondary-box {
-            background-color: #f8fbff;
-            border: 1px solid #e1e8ed;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            color: var(--dark-blue);
+            background-color: #f8fbff; border: 1px solid #bbdefb;
+            padding: 20px; border-radius: 12px; margin-bottom: 40px;
+            color: var(--dark-blue); display: flex; justify-content: space-between; align-items: center;
         }
-
+        .history-section {
+            text-align: left; margin-top: 30px; border-top: 2px solid #f0f4f8; padding-top: 30px;
+        }
+        .history-title {
+            color: var(--primary-blue); font-size: 1.1rem; margin-bottom: 15px; font-weight: 600;
+        }
+        .history-item {
+            background-color: #fff; border-bottom: 1px solid #eee; padding: 12px 0; font-size: 0.9rem;
+        }
+        .q-tag {
+            font-size: 0.75rem; font-weight: bold; padding: 2px 8px;
+            border-radius: 4px; margin-left: 8px; display: inline-block;
+        }
+        .tag-A, .tag-B { color: #1565c0; background: #e3f2fd; }
+        .tag-C { color: #78909c; background: #eceff1; }
+        .tag-D, .tag-E { color: #c62828; background: #ffebee; }
         .btn-restart {
-            display: inline-block;
-            border: 2px solid var(--primary-blue);
-            color: var(--primary-blue);
-            padding: 10px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
+            display: block; width: fit-content; margin: 30px auto 0;
+            border: 2px solid var(--primary-blue); color: var(--primary-blue);
+            padding: 12px 40px; border-radius: 50px; text-decoration: none;
+            font-weight: 600; transition: all 0.3s;
         }
-
-        .btn-restart:hover {
-            background-color: var(--primary-blue);
-            color: white;
-        }
-        
-        .error-msg { color: #95a5a6; font-style: italic; }
+        .btn-restart:hover { background-color: var(--primary-blue); color: white; }
     </style>
 </head>
 <body>
@@ -98,7 +63,7 @@
         
         {% if principal %}
             <div class="result-header">
-                <div class="result-label">Temperamento Dominante</div>
+                <div style="text-transform: uppercase; font-size: 0.8rem; opacity: 0.9;">Predominante</div>
                 <div class="main-result">{{ principal }}</div>
                 <div class="main-score">{{ pont_p }} pontos</div>
             </div>
@@ -106,27 +71,46 @@
             <div class="result-body">
                 {% if secundario %}
                     <div class="secondary-box">
-                        <strong>Traço Secundário:</strong> {{ secundario }} 
-                        <span style="font-size: 0.85em; color: #7f8c8d;">({{ pont_s }} pts)</span>
+                        <span><strong>Secundário:</strong> {{ secundario }}</span>
+                        <span style="font-weight: bold; color: #5c8ab9;">{{ pont_s }} pts</span>
                     </div>
-                {% else %}
-                    <p style="color: #7f8c8d; font-size: 0.9em; margin-bottom: 20px;">
-                        Seu perfil é fortemente definido, sem um secundário evidente.
-                    </p>
                 {% endif %}
 
-                <a href="/" class="btn-restart">Refazer Teste</a>
+                <div class="history-section">
+                    <div class="history-title">Relatório de Respostas</div>
+                    {% for item in historico %}
+                        <div class="history-item">
+                            <div style="color: #34495e; margin-bottom: 4px;">
+                                <strong>{{ item.numero }}.</strong> {{ item.texto }}
+                            </div>
+                            <div style="color: #7f8c8d; font-size: 0.85rem;">
+                                Resposta: <span class="q-tag tag-{{ item.resposta_sigla }}">{{ item.resposta_texto }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <a href="/" class="btn-restart">Novo Teste</a>
             </div>
         {% else %}
-            <div class="result-header" style="background-color: #90a4ae;">
+            <div class="result-header" style="background: #90a4ae;">
                 <div class="main-result">Indefinido</div>
             </div>
             <div class="result-body">
-                <p class="error-msg">Não foi possível determinar um temperamento dominante claro.</p>
+                <p style="color: #7f8c8d; margin-bottom: 20px;">
+                    Pontuação insuficiente (< 6) mesmo após a fase extra.
+                </p>
+                <div class="history-section">
+                    <div class="history-title">Histórico</div>
+                    {% for item in historico %}
+                        <div class="history-item">
+                            <div>{{ item.numero }}. {{ item.texto }}</div>
+                            <span class="q-tag tag-{{ item.resposta_sigla }}">{{ item.resposta_texto }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
                 <a href="/" class="btn-restart">Tentar Novamente</a>
             </div>
         {% endif %}
-
     </div>
 </body>
 </html>
