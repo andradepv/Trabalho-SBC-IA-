@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Temperamento</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8; /* Cinza-azulado muito claro */
+            --card-bg: #ffffff;
+            --primary-blue: #5c8ab9; /* Azul pastel sóbrio */
+            --dark-text: #2c3e50;
+            --soft-text: #7f8c8d;
+            --hover-blue: #e8f0fe;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--dark-text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(92, 138, 185, 0.15);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        h1, h2 { color: var(--primary-blue); margin-bottom: 15px; }
+        p { color: var(--soft-text); line-height: 1.6; margin-bottom: 30px; }
+
+        /* Botão Principal */
+        .btn-start {
+            display: inline-block;
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(92, 138, 185, 0.3);
+        }
+
+        .btn-start:hover {
+            background-color: #4a76a0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(92, 138, 185, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#5c8ab9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 20px;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+        </svg>
+
+        <h1>Análise de Temperamento</h1>
+        <p>Descubra as nuances da sua personalidade através deste sistema baseado em conhecimento. Responda com sinceridade.</p>
+        
+        <a href="/inicio" class="btn-start">Iniciar Avaliação</a>
+    </div>
+</body>
+</html>

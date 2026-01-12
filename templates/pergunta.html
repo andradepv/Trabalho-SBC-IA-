@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questão {{ numero }}</title>
+    <style>
+        /* (Mesmo CSS Global da Index) */
+        :root {
+            --bg-color: #f0f4f8; 
+            --card-bg: #ffffff;
+            --primary-blue: #5c8ab9;
+            --dark-text: #2c3e50;
+            --soft-text: #7f8c8d;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(92, 138, 185, 0.1);
+            width: 90%;
+            max-width: 480px;
+            text-align: center;
+        }
+
+        /* Barra de Progresso */
+        .progress-container {
+            width: 100%;
+            background-color: #e0e7ef;
+            height: 6px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-blue);
+            transition: width 0.3s ease;
+        }
+
+        h3 {
+            color: var(--dark-text);
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        /* Estilo dos Botões de Resposta (Substituindo Radio Buttons) */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-option {
+            background-color: #ffffff;
+            border: 2px solid #e0e7ef; /* Borda sutil */
+            color: var(--soft-text);
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .btn-option:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+            background-color: #f8fbff;
+            transform: translateX(5px); /* Leve movimento para a direita */
+        }
+        
+        .btn-option:active {
+            transform: scale(0.98);
+        }
+
+        .counter {
+            font-size: 0.8rem;
+            color: #b0bec5;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="counter">Questão {{ numero }} de {{ total }}</div>
+        
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+
+        <h3>{{ pergunta.texto }}</h3>
+
+        <form method="post" class="options-grid">
+            <button type="submit" name="resposta" value="A" class="btn-option">Concordo Totalmente</button>
+            <button type="submit" name="resposta" value="B" class="btn-option">Concordo</button>
+            <button type="submit" name="resposta" value="C" class="btn-option">Neutro</button>
+            <button type="submit" name="resposta" value="D" class="btn-option">Discordo</button>
+            <button type="submit" name="resposta" value="E" class="btn-option">Discordo Totalmente</button>
+        </form>
+    </div>
+</body>
+</html>
