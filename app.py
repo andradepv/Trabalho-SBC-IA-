@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, session
-from conhecimento import selecionar_perguntas, selecionar_perguntas_extras, PONTUACAO_RESPOSTAS, MAPA_TEXTO_RESPOSTAS, TEMPERAMENTOS
+# IMPORTANTE: Adicionei 'DESCRICOES' no import abaixo
+from conhecimento import selecionar_perguntas, selecionar_perguntas_extras, PONTUACAO_RESPOSTAS, MAPA_TEXTO_RESPOSTAS, TEMPERAMENTOS, DESCRICOES
 from inferencia import inicializar_pontuacoes, aplicar_regra, avaliar_resultados
 import random
 
 app = Flask(__name__)
-app.secret_key = "blue_app_key_secret"
+app.secret_key = "chave_secreta_projeto_blue"
 
 @app.route("/")
 def index():
@@ -14,42 +15,35 @@ def index():
 def inicio():
     session["pontuacoes"] = inicializar_pontuacoes()
     session["perguntas"] = selecionar_perguntas([])
-    session["historico_respostas"] = [] 
+    session["historico"] = [] 
     session["indice"] = 0
     session["fase_extra"] = False
-    # Define total inicial como 16. Se tiver fase extra, aumentaremos para 21.
-    session["total_perguntas"] = 16 
     return redirect("/pergunta")
 
 @app.route("/simular")
 def simular():
-    # Pega o alvo da URL (ex: ?alvo=Colérico)
-    alvo_url = request.args.get("alvo")
-    if alvo_url and alvo_url in TEMPERAMENTOS:
-        temp_alvo = alvo_url
-    else:
-        temp_alvo = random.choice(TEMPERAMENTOS)
+    alvo = request.args.get("alvo")
+    if not alvo or alvo not in TEMPERAMENTOS:
+        alvo = random.choice(TEMPERAMENTOS)
 
     session["pontuacoes"] = inicializar_pontuacoes()
-    session["historico_respostas"] = []
-    
-    # Gera perguntas e responde automaticamente
+    historico_simulado = []
     perguntas = selecionar_perguntas([])
+
     for i, p in enumerate(perguntas):
-        if p["temperamento"] == temp_alvo:
-            resp_sigla = "A" # Concordo totalmente
+        if p["temperamento"] == alvo:
+            resp = "A"
         else:
-            resp_sigla = "D" # Discordo
-            
-        aplicar_regra(session["pontuacoes"], p["temperamento"], PONTUACAO_RESPOSTAS[resp_sigla])
-        
-        session["historico_respostas"].append({
+            resp = "D" 
+        aplicar_regra(session["pontuacoes"], p["temperamento"], PONTUACAO_RESPOSTAS[resp])
+        historico_simulado.append({
             "numero": i + 1,
             "texto": p["texto"],
-            "resposta_texto": MAPA_TEXTO_RESPOSTAS[resp_sigla] + " (Simulado)",
-            "resposta_sigla": resp_sigla
+            "resposta_texto": MAPA_TEXTO_RESPOSTAS[resp] + " (Simulado)",
+            "resposta_sigla": resp
         })
 
+    session["historico"] = historico_simulado
     return redirect("/resultado")
 
 @app.route("/pergunta", methods=["GET", "POST"])
@@ -57,11 +51,8 @@ def pergunta():
     perguntas = session.get("perguntas", [])
     indice = session.get("indice", 0)
     pontuacoes = session.get("pontuacoes")
-    historico = session.get("historico_respostas", [])
+    historico = session.get("historico", [])
     
-    # Recupera o total atual (16 ou 21)
-    total_atual = session.get("total_perguntas", 16)
-
     if request.method == "POST":
         resposta_sigla = request.form["resposta"]
         pergunta_atual = perguntas[indice]
@@ -76,58 +67,56 @@ def pergunta():
         })
         
         session["pontuacoes"] = pontuacoes
-        session["historico_respostas"] = historico
+        session["historico"] = historico
         session["indice"] += 1
         indice += 1
 
-    # Acabaram as perguntas da lista atual?
-    if indice >= len(perguntas):
-        principal, pont_p, _, _ = avaliar_resultados(pontuacoes)
-        
-        # --- LÓGICA DA FASE EXTRA ---
-        # Se pontuação < 6 E ainda não rodou a fase extra
-        if (principal is None or pont_p < 6) and not session.get("fase_extra"):
-            session["fase_extra"] = True
-            session["indice"] = 0
+        if indice >= len(perguntas):
+            principal, pont_p, _, _ = avaliar_resultados(pontuacoes)
             
-            # Filtra o que já foi respondido
-            perguntas_ja_feitas = [{"texto": h["texto"]} for h in historico]
+            if (principal is None or pont_p < 6) and not session.get("fase_extra"):
+                session["fase_extra"] = True
+                session["indice"] = 0
+                perguntas_ja_feitas = [{"texto": h["texto"]} for h in historico]
+                novas = selecionar_perguntas_extras(perguntas_ja_feitas)
+                session["perguntas"] = novas
+                return redirect("/pergunta")
             
-            # Adiciona mais 5 perguntas
-            novas_extras = selecionar_perguntas_extras(perguntas_ja_feitas)
-            session["perguntas"] = novas_extras
-            
-            # Atualiza o total visual para incluir as 5 novas (16 + 5 = 21)
-            session["total_perguntas"] = 16 + len(novas_extras)
-            
-            return redirect("/pergunta")
-        
-        return redirect("/resultado")
+            return redirect("/resultado")
 
-    return render_template(
-        "pergunta.html",
-        pergunta=perguntas[indice],
-        # Numero corrido para o usuário
-        numero=len(historico) + 1, 
-        total=total_atual
-    )
+        return redirect("/pergunta")
+
+    if indice < len(perguntas):
+        return render_template(
+            "pergunta.html",
+            pergunta=perguntas[indice],
+            numero=len(historico) + 1
+        )
+    
+    return redirect("/resultado")
 
 @app.route("/resultado")
 def resultado():
     pontuacoes = session.get("pontuacoes", inicializar_pontuacoes())
-    principal_cand, pont_p_cand, secundario_cand, pont_s_cand = avaliar_resultados(pontuacoes)
+    historico = session.get("historico", [])
+    
+    cand_principal, pont_p_cand, cand_secundario, pont_s_cand = avaliar_resultados(pontuacoes)
     
     principal = None
     secundario = None
     pont_p = 0
     pont_s = 0
+    descricao_principal = "" # Variável para guardar o texto
 
     if pont_p_cand is not None and pont_p_cand >= 6:
-        principal = principal_cand
+        principal = cand_principal
         pont_p = pont_p_cand
         
+        # === IMPORTANTE: Aqui buscamos o texto no dicionário ===
+        descricao_principal = DESCRICOES.get(principal, "") 
+        
         if pont_s_cand is not None and pont_s_cand > 3:
-            secundario = secundario_cand
+            secundario = cand_secundario
             pont_s = pont_s_cand
             
     return render_template(
@@ -136,7 +125,8 @@ def resultado():
         pont_p=pont_p,
         secundario=secundario,
         pont_s=pont_s,
-        historico=session.get("historico_respostas", [])
+        historico=historico,
+        descricao=descricao_principal # Enviamos para o HTML
     )
 
 if __name__ == "__main__":

@@ -1,6 +1,5 @@
 import random
 
-# --- CONSTANTES GLOBAIS ---
 TEMPERAMENTOS = ["Sanguíneo", "Colérico", "Melancólico", "Fleumático"]
 
 MAPA_TEXTO_RESPOSTAS = {
@@ -8,11 +7,9 @@ MAPA_TEXTO_RESPOSTAS = {
     "D": "Discordo", "E": "Discordo Totalmente"
 }
 
-PONTUACAO_RESPOSTAS = {
-    "A": 2, "B": 1, "C": 0, "D": -1, "E": -2
-}
+PONTUACAO_RESPOSTAS = {"A": 2, "B": 1, "C": 0, "D": -1, "E": -2}
 
-# 20 Perguntas por temperamento
+# Base de dados de perguntas
 BASE_PERGUNTAS = {
     "Sanguíneo": [
         "Gosto de ser o centro das atenções.", "Sou comunicativo em qualquer ambiente.",
@@ -65,30 +62,36 @@ BASE_PERGUNTAS = {
 }
 
 def selecionar_perguntas(excluir_perguntas=[]):
-    """ Seleciona 4 perguntas de cada (16 total) """
+    """ Seleciona 5 perguntas de cada temperamento (Total: 20) """
     novas_perguntas = []
     textos_usados = [p['texto'] for p in excluir_perguntas]
 
     for temp, lista in BASE_PERGUNTAS.items():
-        disponiveis = [texto for texto in lista if texto not in textos_usados]
-        qtd = 5 if len(disponiveis) >= 5 else len(disponiveis)
-        for texto in random.sample(disponiveis, qtd):
+        disponiveis = [t for t in lista if t not in textos_usados]
+        k = 5 if len(disponiveis) >= 5 else len(disponiveis)
+        escolhidas = random.sample(disponiveis, k)
+        for texto in escolhidas:
             novas_perguntas.append({"texto": texto, "temperamento": temp})
     
     random.shuffle(novas_perguntas)
     return novas_perguntas
 
 def selecionar_perguntas_extras(excluir_perguntas=[]):
-    """ Seleciona 5 perguntas aleatórias do pool restante para desempatar """
+    """ Seleciona 5 perguntas aleatórias do pool restante """
     pool = []
     textos_usados = [p['texto'] for p in excluir_perguntas]
-
     for temp, lista in BASE_PERGUNTAS.items():
         for texto in lista:
             if texto not in textos_usados:
                 pool.append({"texto": texto, "temperamento": temp})
-    
-    # Garante 5 perguntas extras
     if len(pool) >= 5:
         return random.sample(pool, 5)
     return pool
+
+# === IMPORTANTE: Este dicionário precisa estar aqui ===
+DESCRICOES = {
+    "Sanguíneo": "Pessoas sanguíneas são extrovertidas, comunicativas e otimistas. Gostam de estar em evidência, falam bastante e fazem amigos com facilidade. São adaptáveis, mas podem ser impulsivas e ter dificuldade com organização.",
+    "Colérico": "Pessoas coléricas são líderes natos, determinados e focados em objetivos. Tomam decisões rápidas e gostam de desafios. São práticos e independentes, mas podem ser impacientes e dominadores.",
+    "Melancólico": "Pessoas melancólicas são analíticas, detalhistas e sensíveis. Buscam a perfeição e preferem o planejamento à improvisação. São introspectivas e leais, mas podem ser críticas demais consigo mesmas.",
+    "Fleumático": "Pessoas fleumáticas são calmas, diplomáticas e equilibradas. Evitam conflitos e trabalham bem sob pressão. São constantes e confiáveis, mas podem ter dificuldade em tomar iniciativa frente a mudanças bruscas."
+}
