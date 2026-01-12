@@ -9,7 +9,6 @@ MAPA_TEXTO_RESPOSTAS = {
 
 PONTUACAO_RESPOSTAS = {"A": 2, "B": 1, "C": 0, "D": -1, "E": -2}
 
-# Base de dados de perguntas
 BASE_PERGUNTAS = {
     "Sanguíneo": [
         "Gosto de ser o centro das atenções.", "Sou comunicativo em qualquer ambiente.",
@@ -61,23 +60,26 @@ BASE_PERGUNTAS = {
     ]
 }
 
-def selecionar_perguntas(excluir_perguntas=[]):
-    """ Seleciona 5 perguntas de cada temperamento (Total: 20) """
+def selecionar_perguntas():
+    """
+    Seleciona 5 perguntas de cada temperamento (Total 20) para o teste inicial.
+    """
     novas_perguntas = []
-    textos_usados = [p['texto'] for p in excluir_perguntas]
 
     for temp, lista in BASE_PERGUNTAS.items():
-        disponiveis = [t for t in lista if t not in textos_usados]
-        k = 5 if len(disponiveis) >= 5 else len(disponiveis)
-        escolhidas = random.sample(disponiveis, k)
+        # Sorteia 5 perguntas aleatórias diretamente da lista
+        escolhidas = random.sample(lista, 5)
+        
         for texto in escolhidas:
-            novas_perguntas.append({"texto": texto, "temperamento": temp})
+            novas_perguntas.append({
+                "texto": texto, 
+                "temperamento": temp
+            })
     
     random.shuffle(novas_perguntas)
     return novas_perguntas
 
 def selecionar_perguntas_extras(excluir_perguntas=[]):
-    """ Seleciona 5 perguntas aleatórias do pool restante """
     pool = []
     textos_usados = [p['texto'] for p in excluir_perguntas]
     for temp, lista in BASE_PERGUNTAS.items():
@@ -88,7 +90,6 @@ def selecionar_perguntas_extras(excluir_perguntas=[]):
         return random.sample(pool, 5)
     return pool
 
-# === IMPORTANTE: Este dicionário precisa estar aqui ===
 DESCRICOES = {
     "Sanguíneo": "Pessoas sanguíneas são extrovertidas, comunicativas e otimistas. Gostam de estar em evidência, falam bastante e fazem amigos com facilidade. São adaptáveis, mas podem ser impulsivas e ter dificuldade com organização.",
     "Colérico": "Pessoas coléricas são líderes natos, determinados e focados em objetivos. Tomam decisões rápidas e gostam de desafios. São práticos e independentes, mas podem ser impacientes e dominadores.",

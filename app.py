@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, session
-# IMPORTANTE: Adicionei 'DESCRICOES' no import abaixo
 from conhecimento import selecionar_perguntas, selecionar_perguntas_extras, PONTUACAO_RESPOSTAS, MAPA_TEXTO_RESPOSTAS, TEMPERAMENTOS, DESCRICOES
 from inferencia import inicializar_pontuacoes, aplicar_regra, avaliar_resultados
 import random
@@ -14,7 +13,7 @@ def index():
 @app.route("/inicio")
 def inicio():
     session["pontuacoes"] = inicializar_pontuacoes()
-    session["perguntas"] = selecionar_perguntas([])
+    session["perguntas"] = selecionar_perguntas()
     session["historico"] = [] 
     session["indice"] = 0
     session["fase_extra"] = False
@@ -28,7 +27,7 @@ def simular():
 
     session["pontuacoes"] = inicializar_pontuacoes()
     historico_simulado = []
-    perguntas = selecionar_perguntas([])
+    perguntas = selecionar_perguntas()
 
     for i, p in enumerate(perguntas):
         if p["temperamento"] == alvo:
@@ -106,13 +105,12 @@ def resultado():
     secundario = None
     pont_p = 0
     pont_s = 0
-    descricao_principal = "" # Variável para guardar o texto
+    descricao_principal = "" 
 
     if pont_p_cand is not None and pont_p_cand >= 6:
         principal = cand_principal
         pont_p = pont_p_cand
         
-        # === IMPORTANTE: Aqui buscamos o texto no dicionário ===
         descricao_principal = DESCRICOES.get(principal, "") 
         
         if pont_s_cand is not None and pont_s_cand > 3:
@@ -126,7 +124,7 @@ def resultado():
         secundario=secundario,
         pont_s=pont_s,
         historico=historico,
-        descricao=descricao_principal # Enviamos para o HTML
+        descricao=descricao_principal
     )
 
 if __name__ == "__main__":
